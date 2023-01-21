@@ -17,7 +17,6 @@ function sleep(time)
 end 
 
 function CMR_IniciarOsMods(res)
-	if res == getThisResource() then
 		DBConnection = dbConnect("sqlite", "sqlite.db")
 	    if (not DBConnection) then
 	        outputDebugString("Error: Falha ao se conectar com banco de dados - Auto System")
@@ -42,9 +41,13 @@ function CMR_IniciarOsMods(res)
 			end
 		end
 		outputDebugString("Success: Resources Iniciado com sucesso!")
-	end
 end
-addEventHandler("onResourceStart", root, CMR_IniciarOsMods)
+
+addEventHandler("onResourceStart", root, function(res)
+	if res == getThisResource() then
+    	callFunctionWithSleeps(CMR_IniciarOsMods, 1, 2, 3) 
+     end
+ end)
 
 function CMR_SalvarOsMods(source)
 	if isElement(source) then
@@ -58,7 +61,6 @@ function CMR_SalvarOsMods(source)
 	    					local retur = dbExec(DBConnection, "INSERT INTO cmr_autosystem (id,resourceName) VALUES (NULL, '"..getResourceName(resources).."')")
 	    					if retur then
 	    						 outputDebugString("Resource Adicionado: "..getResourceName(resources))
-							 sleep(500)
 	    					end
 	    				end
 	    			end
