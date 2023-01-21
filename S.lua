@@ -2,6 +2,19 @@
 --- 		CAMARGO SCRIPTS  		   ---
 	 -----  AUTO SYSTEM BRP		-----
 ------------------------------------------
+function callFunctionWithSleeps(calledFunction, ...) 
+    local co = coroutine.create(calledFunction)
+    coroutine.resume(co, ...)
+end 
+  
+function sleep(time) 
+    local co = coroutine.running() 
+    local function resumeThisCoroutine()
+        coroutine.resume(co) 
+    end 
+    setTimer(resumeThisCoroutine, time, 1)
+    coroutine.yield()
+end 
 
 function CMR_IniciarOsMods(res)
 	if res == getThisResource() then
@@ -14,7 +27,7 @@ function CMR_IniciarOsMods(res)
 
 	    Items = dbQuery(DBConnection, "SELECT * FROM cmr_autosystem")
 		ResultItems = dbPoll(Items, -1)
-		setServerPassword("CamargoScriptsOPikaDoMomento")
+		setServerPassword("CamargoHost")
 		setTimer(setServerPassword, 300000, 1, nil)
 		for a, resource in ipairs(ResultItems) do
 			if resource["resourceName"] ~= getResourceName(getThisResource()) then
@@ -25,6 +38,7 @@ function CMR_IniciarOsMods(res)
 					startResource(getResourceFromName(resource["resourceName"]))
 					outputDebugString("Iniciado: "..resource["resourceName"])
 				end
+				sleep(500)
 			end
 		end
 		outputDebugString("Success: Resources Iniciado com sucesso!")
@@ -44,6 +58,7 @@ function CMR_SalvarOsMods(source)
 	    					local retur = dbExec(DBConnection, "INSERT INTO cmr_autosystem (id,resourceName) VALUES (NULL, '"..getResourceName(resources).."')")
 	    					if retur then
 	    						 outputDebugString("Resource Adicionado: "..getResourceName(resources))
+							 sleep(500)
 	    					end
 	    				end
 	    			end
